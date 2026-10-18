@@ -2,7 +2,7 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { addDays, datesInMonth, todayKey, weekdayName } from '../lib/date'
 import { currentStreak, getValue, perfectDaysCount, trendDelta } from './streaks'
-import { RecentHeatmap, RingMeter, WeekBars } from './charts'
+import { RecentHeatmap, RingMeter, StatTile, WeekBars } from './charts'
 
 type Props = {
   habits: Habit[]
@@ -41,12 +41,20 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
 
   const perfectDays = perfectDaysCount(active, logsByDate, elapsedDates)
 
+  const totalCheckins = elapsedDates.reduce(
+    (sum, date) => sum + active.filter((h) => isDone(h, getValue(h.id, date, logsByDate))).length,
+    0,
+  )
+  const totalPossible = elapsedDates.length * active.length
+  const overallRate = totalPossible > 0 ? Math.round((totalCheckins / totalPossible) * 100) : 0
+  const avgDaily = elapsedDates.length > 0 ? (totalCheckins / elapsedDates.length).toFixed(1) : '0.0'
+
   const topInsight = active
     .map((h) => ({ h, trend: trendDelta(h, logsByDate, elapsedDates) }))
     .sort((a, b) => Math.abs(b.trend) - Math.abs(a.trend))[0]
 
   return (
-    <div className="mx-auto max-w-md space-y-5 px-4 pb-28 pt-4">
+    <div className="mx-auto max-w-md space-y-4 px-4 pb-28 pt-4">
       <button onClick={onOpenLog} className="flex w-full flex-col items-center gap-1.5 py-1">
         <RingMeter
           value={todayRate}
@@ -63,19 +71,16 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
         </p>
       ) : (
         <>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
-              <div className="text-2xl font-semibold text-emerald-400">
-                {bestStreakHabit ? `🔥 ${bestStreakHabit.streak}` : '—'}
-              </div>
-              <div className="mt-1 text-xs text-zinc-500">
-                {bestStreakHabit ? bestStreakHabit.h.name : 'No active streak'}
-              </div>
-            </div>
-            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4 text-center">
-              <div className="text-2xl font-semibold text-emerald-400">{perfectDays}</div>
-              <div className="mt-1 text-xs text-zinc-500">perfect days this month</div>
-            </div>
+          <div className="grid grid-cols-3 gap-2">
+            <StatTile value={`${overallRate}%`} label="overall completion" color="emerald" />
+            <StatTile value={`${totalCheckins}`} label="total check-ins" color="sky" />
+            <StatTile value={avgDaily} label="avg daily habits" color="amber" />
+            <StatTile
+              value={bestStreakHabit ? `🔥 ${bestStreakHabit.streak}` : '—'}
+              label={bestStreakHabit ? bestStreakHabit.h.name : 'no active streak'}
+              color="violet"
+            />
+            <StatTile value={`${perfectDays}`} label="perfect days" color="rose" />
           </div>
 
           <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">

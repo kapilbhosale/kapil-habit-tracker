@@ -3,6 +3,7 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { datesInMonth, MONTH_NAMES, todayKey } from '../lib/date'
 import { getValue } from './streaks'
+import { HabitDial } from './HabitDial'
 
 type Props = {
   habits: Habit[]
@@ -57,22 +58,6 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
 
   return (
     <div className="mx-auto max-w-md px-4 pb-24 pt-6">
-      <div className="-mx-4 mb-4 flex gap-2 overflow-x-auto px-4 pb-1">
-        {active.map((h) => (
-          <button
-            key={h.id}
-            onClick={() => setSelectedId(h.id)}
-            className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-sm ${
-              h.id === habit.id
-                ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
-                : 'border-zinc-700 text-zinc-400'
-            }`}
-          >
-            {h.name}
-          </button>
-        ))}
-      </div>
-
       <div className="mb-4 flex items-center justify-between">
         <button onClick={() => changeMonth(-1)} className="px-2 text-zinc-400">
           ‹
@@ -119,6 +104,10 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
             </button>
           )
         })}
+      </div>
+
+      <div className="mt-6">
+        <HabitDial habits={active} selectedId={habit.id} onSelect={setSelectedId} />
       </div>
     </div>
   )

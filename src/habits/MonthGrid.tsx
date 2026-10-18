@@ -44,6 +44,16 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
   const dayTotal = (date: string) =>
     active.filter((h) => isDone(h, getValue(h.id, date, logsByDate))).length
 
+  const dayTotalColor = (date: string) => {
+    if (active.length === 0) return ''
+    const total = dayTotal(date)
+    if (total === 0) return 'bg-red-950/70 text-red-400'
+    const rate = total / active.length
+    if (rate < 0.5) return 'bg-amber-950/70 text-amber-400'
+    if (rate < 1) return 'bg-lime-950/70 text-lime-400'
+    return 'bg-emerald-900/70 text-emerald-300'
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-2 pb-28 pt-6">
       <div className="mb-4 flex items-center justify-between px-2">
@@ -112,8 +122,10 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
             <tr className="border-t border-zinc-700 font-medium">
               <td className="sticky left-0 z-10 bg-zinc-950 px-2 py-1.5 text-zinc-300">Day total</td>
               {dates.map((d) => (
-                <td key={d} className="px-0.5 py-1.5 text-center text-zinc-400">
-                  {dayTotal(d) || ''}
+                <td key={d} className="px-0.5 py-1.5 text-center">
+                  <span className={`inline-flex h-6 w-6 items-center justify-center rounded ${dayTotalColor(d)}`}>
+                    {dayTotal(d) || 0}
+                  </span>
                 </td>
               ))}
               <td className="px-2 py-1.5 text-right text-zinc-500">/{active.length}</td>

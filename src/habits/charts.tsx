@@ -1,5 +1,31 @@
 // Lightweight inline-SVG chart primitives — no charting library, keeps the PWA bundle small.
 
+// Fixed, small categorical set — each stat always maps to the same hue, never generated/cycled.
+const STAT_COLORS = {
+  emerald: 'text-emerald-400',
+  sky: 'text-sky-400',
+  amber: 'text-amber-400',
+  violet: 'text-violet-400',
+  rose: 'text-rose-400',
+} as const
+
+export function StatTile({
+  value,
+  label,
+  color,
+}: {
+  value: string
+  label: string
+  color: keyof typeof STAT_COLORS
+}) {
+  return (
+    <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-3 text-center">
+      <div className={`text-xl font-semibold ${STAT_COLORS[color]}`}>{value}</div>
+      <div className="mt-1 text-[11px] leading-tight text-zinc-500">{label}</div>
+    </div>
+  )
+}
+
 export function RingMeter({
   value,
   size = 128,
