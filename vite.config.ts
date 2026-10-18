@@ -12,7 +12,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.svg'],
       manifest: {
-        name: 'Habit Tracker',
+        name: 'Habits Social',
         short_name: 'Habits',
         description: 'Personal habit tracker',
         theme_color: '#18181b',

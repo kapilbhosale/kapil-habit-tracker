@@ -45,7 +45,7 @@ export function SignInScreen() {
           <div className="mb-3 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500 text-2xl">
             🔥
           </div>
-          <h1 className="text-2xl font-semibold text-zinc-50">Habits</h1>
+          <h1 className="text-2xl font-semibold text-zinc-50">Habits Social</h1>
           <p className="mt-1 text-sm text-zinc-500">Build habits that stick, one day at a time.</p>
         </div>
 

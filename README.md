@@ -1,4 +1,4 @@
-# Habit Tracker
+# Habits Social
 
 Personal habit-tracking PWA. React + Vite + TypeScript + Tailwind, Firebase (Auth + Firestore, offline-first), deployed to Cloudflare Pages via GitHub Actions.
 
