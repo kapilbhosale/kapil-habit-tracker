@@ -4,6 +4,8 @@ import { isDone } from './types'
 import { datesInMonth, MONTH_NAMES, todayKey } from '../lib/date'
 import { getValue } from './streaks'
 import { HabitDial } from './HabitDial'
+import { colorClasses } from './colors'
+import { MonthHabitHeatmaps } from './MonthHabitHeatmaps'
 
 type Props = {
   habits: Habit[]
@@ -55,6 +57,7 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
 
   const doneCount = dates.filter((d) => isDone(habit, getValue(habit.id, d, logsByDate))).length
   const rate = dates.length ? Math.round((doneCount / dates.length) * 100) : 0
+  const c = colorClasses(habit.color)
 
   return (
     <div className="mx-auto max-w-md px-4 pb-24 pt-6">
@@ -92,9 +95,7 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
               key={date}
               onClick={() => cellTap(date)}
               className={`flex aspect-square flex-col items-center justify-center rounded-lg text-sm ${
-                done
-                  ? 'bg-emerald-500 text-zinc-950'
-                  : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'
+                done ? `${c.bgSolid} ${c.onSolid}` : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'
               } ${date === today ? 'ring-1 ring-zinc-400' : ''}`}
             >
               <span>{dayNum}</span>
@@ -108,6 +109,11 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
 
       <div className="mt-6">
         <HabitDial habits={active} selectedId={habit.id} onSelect={setSelectedId} />
+      </div>
+
+      <div className="mt-8">
+        <h2 className="mb-3 text-xs font-medium text-zinc-500">All habits this month</h2>
+        <MonthHabitHeatmaps habits={active} logsByDate={logsByDate} dates={dates} />
       </div>
     </div>
   )

@@ -1,9 +1,12 @@
+import type { HabitColor } from './colors'
+
 export type HabitType = 'boolean' | 'number'
 
 export type Habit = {
   id: string
   name: string
   type: HabitType
+  color?: HabitColor // undefined -> falls back to the default color
   unit?: string // e.g. "reps", "glasses" — number habits only
   target?: number // optional daily target — number habits only
   createdAt: number

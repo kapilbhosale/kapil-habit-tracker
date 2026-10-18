@@ -12,6 +12,7 @@ import {
 import { db } from '../firebase'
 import { todayKey } from '../lib/date'
 import type { Habit, HabitLog, HabitType } from './types'
+import type { HabitColor } from './colors'
 
 export function useHabits(uid: string | undefined) {
   const [habits, setHabits] = useState<Habit[]>([])
@@ -42,11 +43,18 @@ export function useHabits(uid: string | undefined) {
     }
   }, [uid])
 
-  const addHabit = async (name: string, type: HabitType, unit?: string, target?: number) => {
+  const addHabit = async (
+    name: string,
+    type: HabitType,
+    color: HabitColor,
+    unit?: string,
+    target?: number,
+  ) => {
     if (!uid) return
     const habit: Record<string, unknown> = {
       name,
       type,
+      color,
       createdAt: Date.now(),
       archived: false,
     }
@@ -84,6 +92,11 @@ export function useHabits(uid: string | undefined) {
     await updateDoc(doc(db, 'users', uid, 'habits', habitId), { name })
   }
 
+  const recolorHabit = async (habitId: string, color: HabitColor) => {
+    if (!uid) return
+    await updateDoc(doc(db, 'users', uid, 'habits', habitId), { color })
+  }
+
   return {
     habits,
     logsByDate,
@@ -94,5 +107,6 @@ export function useHabits(uid: string | undefined) {
     archiveHabit,
     unarchiveHabit,
     renameHabit,
+    recolorHabit,
   }
 }

@@ -3,6 +3,7 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { datesInMonth, MONTH_NAMES, todayKey } from '../lib/date'
 import { getValue } from './streaks'
+import { colorClasses } from './colors'
 
 type Props = {
   habits: Habit[]
@@ -92,9 +93,11 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
             {active.map((h) => {
               const doneCount = dates.filter((d) => isDone(h, getValue(h.id, d, logsByDate))).length
               const rate = dates.length ? Math.round((doneCount / dates.length) * 100) : 0
+              const c = colorClasses(h.color)
               return (
                 <tr key={h.id} className="border-t border-zinc-800">
                   <td className="sticky left-0 z-10 min-w-[120px] bg-zinc-950 px-2 py-1.5 text-zinc-200">
+                    <span className={`mr-1.5 inline-block h-1.5 w-1.5 rounded-full ${c.dot}`} />
                     {h.name}
                   </td>
                   {dates.map((d) => {
@@ -105,9 +108,7 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
                         <button
                           onClick={() => cellTap(h, d)}
                           className={`flex h-6 w-6 items-center justify-center rounded ${
-                            done
-                              ? 'bg-emerald-500 text-zinc-950'
-                              : 'bg-zinc-900 text-zinc-700 hover:bg-zinc-800'
+                            done ? `${c.bgSolid} ${c.onSolid}` : 'bg-zinc-900 text-zinc-700 hover:bg-zinc-800'
                           }`}
                         >
                           {h.type === 'number' ? Number(value) || '' : done ? '✓' : ''}

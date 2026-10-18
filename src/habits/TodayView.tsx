@@ -2,6 +2,7 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { todayKey } from '../lib/date'
 import { currentStreak } from './streaks'
+import { colorClasses } from './colors'
 
 type Props = {
   habits: Habit[]
@@ -21,12 +22,13 @@ export function TodayView({ habits, logsByDate, onToggle, onSetValue }: Props) {
           const value = logsByDate[`${h.id}_${date}`]?.value
           const done = isDone(h, value)
           const streak = currentStreak(h, logsByDate)
+          const c = colorClasses(h.color)
 
           return (
             <li
               key={h.id}
               className={`rounded-xl border px-4 py-3 transition ${
-                done ? 'border-emerald-500 bg-emerald-500/10' : 'border-zinc-800 bg-zinc-900'
+                done ? `${c.border} ${c.bgSoft}` : 'border-zinc-800 bg-zinc-900'
               }`}
             >
               <div className="flex items-center justify-between gap-3">
@@ -35,10 +37,10 @@ export function TodayView({ habits, logsByDate, onToggle, onSetValue }: Props) {
                     onClick={() => onToggle(h.id)}
                     className="flex flex-1 items-center justify-between text-left"
                   >
-                    <span className={done ? 'text-emerald-300' : 'text-zinc-100'}>{h.name}</span>
+                    <span className={done ? c.text : 'text-zinc-100'}>{h.name}</span>
                     <span
                       className={`flex h-6 w-6 items-center justify-center rounded-full border-2 text-sm ${
-                        done ? 'border-emerald-400 bg-emerald-400 text-zinc-950' : 'border-zinc-600'
+                        done ? `${c.border} ${c.bgSolid} ${c.onSolid}` : 'border-zinc-600'
                       }`}
                     >
                       {done ? '✓' : ''}
@@ -46,7 +48,7 @@ export function TodayView({ habits, logsByDate, onToggle, onSetValue }: Props) {
                   </button>
                 ) : (
                   <>
-                    <span className={done ? 'text-emerald-300' : 'text-zinc-100'}>{h.name}</span>
+                    <span className={done ? c.text : 'text-zinc-100'}>{h.name}</span>
                     <div className="flex items-center gap-2">
                       <button
                         onClick={() => onSetValue(h.id, date, Math.max(0, (Number(value) || 0) - 1))}

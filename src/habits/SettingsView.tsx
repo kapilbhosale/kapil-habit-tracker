@@ -1,21 +1,33 @@
 import { useState } from 'react'
 import type { Habit, HabitType } from './types'
 import { AddHabitForm } from './AddHabitForm'
+import { ColorSwatchPicker } from './ColorSwatchPicker'
+import { colorClasses, type HabitColor } from './colors'
 
 type Props = {
   habits: Habit[]
-  onAdd: (name: string, type: HabitType, unit?: string, target?: number) => void
+  onAdd: (name: string, type: HabitType, color: HabitColor, unit?: string, target?: number) => void
   onArchive: (habitId: string) => void
   onUnarchive: (habitId: string) => void
   onRename: (habitId: string, name: string) => void
+  onRecolor: (habitId: string, color: HabitColor) => void
   onSignOut: () => void
 }
 
-export function SettingsView({ habits, onAdd, onArchive, onUnarchive, onRename, onSignOut }: Props) {
+export function SettingsView({
+  habits,
+  onAdd,
+  onArchive,
+  onUnarchive,
+  onRename,
+  onRecolor,
+  onSignOut,
+}: Props) {
   const active = habits.filter((h) => !h.archived)
   const archived = habits.filter((h) => h.archived)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [editName, setEditName] = useState('')
+  const [pickingColorFor, setPickingColorFor] = useState<string | null>(null)
 
   const startEdit = (h: Habit) => {
     setEditingId(h.id)
@@ -29,41 +41,56 @@ export function SettingsView({ habits, onAdd, onArchive, onUnarchive, onRename, 
 
   return (
     <div className="mx-auto max-w-md space-y-6 px-4 pb-24 pt-6">
-      <AddHabitForm onAdd={onAdd} />
+      <AddHabitForm onAdd={onAdd} existingCount={habits.length} />
 
       <div>
         <h2 className="mb-2 text-sm font-medium text-zinc-400">Your habits</h2>
         <ul className="space-y-2">
           {active.map((h) => (
-            <li
-              key={h.id}
-              className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2"
-            >
-              {editingId === h.id ? (
-                <input
-                  autoFocus
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  onBlur={saveEdit}
-                  onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
-                  className="flex-1 rounded border border-zinc-700 bg-zinc-800 px-2 py-1 text-zinc-100"
+            <li key={h.id} className="rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2">
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setPickingColorFor(pickingColorFor === h.id ? null : h.id)}
+                  className={`h-4 w-4 shrink-0 rounded-full ${colorClasses(h.color).dot}`}
+                  aria-label="Change color"
                 />
-              ) : (
-                <button onClick={() => startEdit(h)} className="flex-1 text-left text-zinc-100">
-                  {h.name}
-                  {h.type === 'number' && (
-                    <span className="ml-2 text-xs text-zinc-500">
-                      number{h.target ? ` · target ${h.target}${h.unit ? ` ${h.unit}` : ''}` : ''}
-                    </span>
-                  )}
+                {editingId === h.id ? (
+                  <input
+                    autoFocus
+                    value={editName}
+                    onChange={(e) => setEditName(e.target.value)}
+                    onBlur={saveEdit}
+                    onKeyDown={(e) => e.key === 'Enter' && saveEdit()}
+                    className="ml-2 flex-1 rounded border border-zinc-700 bg-zinc-800 px-2 py-1 text-zinc-100"
+                  />
+                ) : (
+                  <button onClick={() => startEdit(h)} className="ml-2 flex-1 text-left text-zinc-100">
+                    {h.name}
+                    {h.type === 'number' && (
+                      <span className="ml-2 text-xs text-zinc-500">
+                        number{h.target ? ` · target ${h.target}${h.unit ? ` ${h.unit}` : ''}` : ''}
+                      </span>
+                    )}
+                  </button>
+                )}
+                <button
+                  onClick={() => onArchive(h.id)}
+                  className="ml-2 text-xs text-zinc-500 hover:text-red-400"
+                >
+                  Archive
                 </button>
+              </div>
+              {pickingColorFor === h.id && (
+                <div className="mt-3 border-t border-zinc-800 pt-3">
+                  <ColorSwatchPicker
+                    value={h.color ?? 'emerald'}
+                    onChange={(c) => {
+                      onRecolor(h.id, c)
+                      setPickingColorFor(null)
+                    }}
+                  />
+                </div>
               )}
-              <button
-                onClick={() => onArchive(h.id)}
-                className="ml-2 text-xs text-zinc-500 hover:text-red-400"
-              >
-                Archive
-              </button>
             </li>
           ))}
           {active.length === 0 && (

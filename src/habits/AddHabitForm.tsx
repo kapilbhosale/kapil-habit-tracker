@@ -1,15 +1,27 @@
 import { useState } from 'react'
 import type { HabitType } from './types'
+import { HABIT_COLORS, suggestColorForName, type HabitColor } from './colors'
+import { ColorSwatchPicker } from './ColorSwatchPicker'
 
 type Props = {
-  onAdd: (name: string, type: HabitType, unit?: string, target?: number) => void
+  onAdd: (name: string, type: HabitType, color: HabitColor, unit?: string, target?: number) => void
+  existingCount: number
 }
 
-export function AddHabitForm({ onAdd }: Props) {
+export function AddHabitForm({ onAdd, existingCount }: Props) {
   const [name, setName] = useState('')
   const [type, setType] = useState<HabitType>('boolean')
+  const [color, setColor] = useState<HabitColor>(HABIT_COLORS[existingCount % HABIT_COLORS.length])
+  const [colorTouched, setColorTouched] = useState(false)
   const [unit, setUnit] = useState('')
   const [target, setTarget] = useState('')
+
+  const handleNameChange = (value: string) => {
+    setName(value)
+    // Suggest a color from the name itself so new habits land on a nice,
+    // varied palette automatically — until the user picks one themselves.
+    if (!colorTouched && value.trim()) setColor(suggestColorForName(value.trim()))
+  }
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -17,11 +29,14 @@ export function AddHabitForm({ onAdd }: Props) {
     onAdd(
       name.trim(),
       type,
+      color,
       type === 'number' && unit.trim() ? unit.trim() : undefined,
       type === 'number' && target ? Number(target) : undefined,
     )
     setName('')
     setType('boolean')
+    setColor(HABIT_COLORS[(existingCount + 1) % HABIT_COLORS.length])
+    setColorTouched(false)
     setUnit('')
     setTarget('')
   }
@@ -32,7 +47,7 @@ export function AddHabitForm({ onAdd }: Props) {
 
       <input
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => handleNameChange(e.target.value)}
         placeholder="e.g. Push ups"
         className="mb-3 w-full rounded-md border border-zinc-700 bg-zinc-800 px-3 py-2 text-zinc-100 placeholder-zinc-500"
       />
@@ -80,6 +95,19 @@ export function AddHabitForm({ onAdd }: Props) {
           />
         </div>
       )}
+
+      <label className="mb-1.5 block text-sm text-zinc-400">
+        Color {!colorTouched && name.trim() && <span className="text-zinc-600">(suggested)</span>}
+      </label>
+      <div className="mb-4">
+        <ColorSwatchPicker
+          value={color}
+          onChange={(c) => {
+            setColor(c)
+            setColorTouched(true)
+          }}
+        />
+      </div>
 
       <button
         type="submit"

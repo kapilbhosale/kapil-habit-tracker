@@ -1,8 +1,11 @@
+import { useState } from 'react'
 import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { addDays, datesInMonth, todayKey, weekdayName } from '../lib/date'
 import { currentStreak, getValue, perfectDaysCount, trendDelta } from './streaks'
-import { RecentHeatmap, RingMeter, StatTile, WeekBars } from './charts'
+import { RingMeter, StatTile, WeekBars } from './charts'
+import { HabitDial } from './HabitDial'
+import { YearHeatmap } from './YearHeatmap'
 
 type Props = {
   habits: Habit[]
@@ -17,17 +20,13 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
   const monthDates = datesInMonth(now.getFullYear(), now.getMonth())
   const elapsedDates = monthDates.slice(0, now.getDate())
 
-  const dayRate = (date: string) => {
-    if (active.length === 0) return 0
-    const done = active.filter((h) => isDone(h, getValue(h.id, date, logsByDate))).length
-    return done / active.length
-  }
+  const [yearHabitId, setYearHabitId] = useState(active[0]?.id)
+  const yearHabit = active.find((h) => h.id === yearHabitId) ?? active[0]
 
   const todayDone = active.filter((h) => isDone(h, getValue(h.id, today, logsByDate))).length
   const todayRate = active.length ? todayDone / active.length : 0
 
   const last7 = Array.from({ length: 7 }, (_, i) => addDays(today, i - 6))
-  const last14 = Array.from({ length: 14 }, (_, i) => addDays(today, i - 13))
   const weekData = last7.map((date) => ({
     label: weekdayName(date)[0],
     value: active.filter((h) => isDone(h, getValue(h.id, date, logsByDate))).length,
@@ -88,10 +87,14 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
             <WeekBars data={weekData} />
           </div>
 
-          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
-            <div className="mb-3 text-xs font-medium text-zinc-400">Last 14 days</div>
-            <RecentHeatmap dates={last14} rateByDate={dayRate} todayKey={today} />
-          </div>
+          {yearHabit && (
+            <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
+              <YearHeatmap habit={yearHabit} logsByDate={logsByDate} />
+              <div className="mt-3">
+                <HabitDial habits={active} selectedId={yearHabit.id} onSelect={setYearHabitId} />
+              </div>
+            </div>
+          )}
 
           {topInsight && Math.abs(topInsight.trend) >= 0.15 && (
             <div className="rounded-xl border border-emerald-800/50 bg-emerald-500/5 p-4 pr-14 text-sm">

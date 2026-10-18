@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import type { Habit } from './types'
+import { colorClasses } from './colors'
 
 const ITEM_HEIGHT = 40
 const VISIBLE = 3 // odd, so one item centers exactly
@@ -68,7 +69,9 @@ export function HabitDial({ habits, selectedId, onSelect }: Props) {
               key={h.id}
               onClick={() => onSelect(h.id)}
               className={`flex w-full snap-center items-center justify-center truncate px-2 text-center transition-colors ${
-                h.id === selectedId ? 'text-base font-medium text-emerald-300' : 'text-sm text-zinc-600'
+                h.id === selectedId
+                  ? `text-base font-medium ${colorClasses(h.color).text}`
+                  : 'text-sm text-zinc-600'
               }`}
               style={{ height: ITEM_HEIGHT }}
             >

@@ -32,6 +32,7 @@ function HabitApp({ uid }: { uid: string }) {
     archiveHabit,
     unarchiveHabit,
     renameHabit,
+    recolorHabit,
   } = useHabits(uid)
   const { signOutUser } = useAuth()
   const [tab, setTab] = useState<Tab>('dashboard')
@@ -53,6 +54,7 @@ function HabitApp({ uid }: { uid: string }) {
             onArchive={archiveHabit}
             onUnarchive={unarchiveHabit}
             onRename={renameHabit}
+            onRecolor={recolorHabit}
             onSignOut={signOutUser}
           />
         )}
