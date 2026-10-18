@@ -1,4 +1,5 @@
 // Lightweight inline-SVG chart primitives — no charting library, keeps the PWA bundle small.
+import { githubGreenHex } from './colors'
 
 // Fixed, small categorical set — each stat always maps to the same hue, never generated/cycled.
 const STAT_COLORS = {
@@ -84,19 +85,13 @@ export function WeekBars({ data }: { data: { label: string; value: number; max: 
   return (
     <svg width="100%" viewBox={`0 0 ${width} ${height + 20}`} className="overflow-visible">
       {data.map((d, i) => {
-        const h = d.max > 0 ? Math.max(2, (d.value / d.max) * height) : 2
+        const rate = d.max > 0 ? d.value / d.max : 0
+        const h = d.max > 0 ? Math.max(2, rate * height) : 2
         const x = i * (barWidth + gap)
         const isMax = d.value === d.max && d.max > 0
         return (
           <g key={i}>
-            <rect
-              x={x}
-              y={height - h}
-              width={barWidth}
-              height={h}
-              rx={4}
-              className={isMax ? 'fill-emerald-400' : 'fill-zinc-700'}
-            />
+            <rect x={x} y={height - h} width={barWidth} height={h} rx={4} style={{ fill: githubGreenHex(rate) }} />
             <text
               x={x + barWidth / 2}
               y={height - h - 6}

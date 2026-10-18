@@ -170,6 +170,17 @@ export function githubGreenClass(rate: number): string {
   return GITHUB_GREEN_RAMP[4] // 90-100%
 }
 
+// Same scale as raw hex, for SVG fills (bars, etc.) where a Tailwind bg class won't apply.
+const GITHUB_GREEN_HEX = ['#27272a', '#aceebb', '#4ac26b', '#2da44e', '#116329'] as const
+
+export function githubGreenHex(rate: number): string {
+  if (rate <= 0) return GITHUB_GREEN_HEX[0]
+  if (rate <= 0.3) return GITHUB_GREEN_HEX[1]
+  if (rate <= 0.6) return GITHUB_GREEN_HEX[2]
+  if (rate <= 0.9) return GITHUB_GREEN_HEX[3]
+  return GITHUB_GREEN_HEX[4]
+}
+
 // The red -> amber -> lime -> green "how was this day" scale, for a badge on a dark surface
 // (the month grid's day-total pill).
 export function dayCompletionBadgeClass(doneCount: number, total: number): string {

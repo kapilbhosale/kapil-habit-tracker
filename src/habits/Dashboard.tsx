@@ -95,7 +95,7 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
             <StatTile value={avgDaily} total={`${active.length}`} label="avg daily habits" color="amber" />
             <StatTile
               value={bestStreakHabit ? `🔥 ${bestStreakHabit.streak}` : '—'}
-              label={bestStreakHabit ? bestStreakHabit.h.name : 'no active streak'}
+              label={bestStreakHabit ? `day streak · ${bestStreakHabit.h.name}` : 'no active streak'}
               color="violet"
             />
             <StatTile value={`${perfectDays}`} total={`${elapsedDates.length}`} label="perfect days" color="rose" />
