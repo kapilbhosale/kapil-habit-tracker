@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from './auth/AuthContext'
+import { SignInScreen } from './auth/SignInScreen'
 import { useHabits } from './habits/useHabits'
 import { Dashboard } from './habits/Dashboard'
 import { MonthTab } from './habits/MonthTab'
@@ -7,20 +8,6 @@ import { SettingsView } from './habits/SettingsView'
 import { LogSheet } from './habits/LogSheet'
 
 type Tab = 'dashboard' | 'month' | 'settings'
-
-function SignInScreen() {
-  const { signIn } = useAuth()
-  return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-950 text-zinc-100">
-      <button
-        onClick={signIn}
-        className="rounded-lg bg-emerald-500 px-6 py-3 font-medium text-zinc-950 hover:bg-emerald-400"
-      >
-        Sign in with Google
-      </button>
-    </div>
-  )
-}
 
 function HabitApp({ uid }: { uid: string }) {
   const {
