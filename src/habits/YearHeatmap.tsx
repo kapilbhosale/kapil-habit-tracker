@@ -3,12 +3,14 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { getValue } from './streaks'
 import { addDays, todayKey } from '../lib/date'
-import { colorClasses } from './colors'
+import { densityClass } from './colors'
 
 const WEEKS = 53
 const CELL = 10
 const GAP = 3
 
+// Dashboard heatmaps use a uniform GitHub-style green ramp (gray -> dark green
+// by intensity), not the habit's own color — that stays on the Month tab.
 export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: Record<string, HabitLog> }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const today = todayKey()
@@ -16,7 +18,6 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
   // Align the grid so today lands at the bottom of the last column.
   const todayWeekday = new Date().getDay()
   const startOffset = -(totalDays - 1 - (6 - todayWeekday))
-  const c = colorClasses(habit.color)
 
   const columns = Array.from({ length: WEEKS }, (_, w) =>
     Array.from({ length: 7 }, (_, d) => addDays(today, startOffset + w * 7 + d)),
@@ -44,13 +45,19 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
           {columns.map((week, wi) => (
             <div key={wi} className="flex flex-col gap-[3px]">
               {week.map((date) => {
-                const done = isDone(habit, getValue(habit.id, date, logsByDate))
+                const value = getValue(habit.id, date, logsByDate)
                 const future = date > today
+                const rate =
+                  habit.type === 'number'
+                    ? Math.min(1, (Number(value) || 0) / (habit.target || 1))
+                    : value === true
+                      ? 1
+                      : 0
                 return (
                   <div
                     key={date}
                     title={date}
-                    className={`rounded-[2px] ${future ? 'opacity-0' : done ? c.dot : 'bg-zinc-800'} ${
+                    className={`rounded-[2px] ${future ? 'opacity-0' : densityClass('emerald', rate)} ${
                       date === today ? 'ring-1 ring-zinc-400' : ''
                     }`}
                     style={{ width: CELL, height: CELL }}

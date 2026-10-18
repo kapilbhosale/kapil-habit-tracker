@@ -158,18 +158,8 @@ export function densityClass(color: HabitColor | undefined, rate: number): strin
   return ramp[4]
 }
 
-// The red -> amber -> lime -> green "how was this day" scale, shared by the
-// month grid's day-total column and the aggregate year heatmap.
-export function dayCompletionColorClass(doneCount: number, total: number): string {
-  if (total <= 0) return 'bg-zinc-900'
-  if (doneCount === 0) return 'bg-red-600'
-  const rate = doneCount / total
-  if (rate < 0.5) return 'bg-amber-500'
-  if (rate < 1) return 'bg-lime-500'
-  return 'bg-emerald-500'
-}
-
-// Softer/translucent variant for badges on a dark surface (the month grid's day-total pill).
+// The red -> amber -> lime -> green "how was this day" scale, for a badge on a dark surface
+// (the month grid's day-total pill).
 export function dayCompletionBadgeClass(doneCount: number, total: number): string {
   if (total <= 0) return ''
   if (doneCount === 0) return 'bg-red-950/70 text-red-400'

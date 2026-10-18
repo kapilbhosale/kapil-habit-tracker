@@ -3,15 +3,15 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { getValue } from './streaks'
 import { addDays, todayKey } from '../lib/date'
-import { dayCompletionColorClass } from './colors'
+import { densityClass } from './colors'
 
 const WEEKS = 53
 const CELL = 10
 const GAP = 3
 
 // Aggregate, all-habits version of YearHeatmap: each cell is colored by how
-// many of that day's habits were completed, using the same red -> amber ->
-// lime -> green scale as the month grid's day-total column.
+// many of that day's habits were completed, on a GitHub-style gray -> dark
+// green ramp (the Month tab's red/amber/green status scale stays there).
 export function YearCompletionHeatmap({
   habits,
   logsByDate,
@@ -53,13 +53,14 @@ export function YearCompletionHeatmap({
             <div key={wi} className="flex flex-col gap-[3px]">
               {week.map((date) => {
                 const future = date > today
+                const rate = habits.length > 0 ? dayTotal(date) / habits.length : 0
                 return (
                   <div
                     key={date}
                     title={date}
-                    className={`rounded-[2px] ${
-                      future ? 'opacity-0' : dayCompletionColorClass(dayTotal(date), habits.length)
-                    } ${date === today ? 'ring-1 ring-zinc-400' : ''}`}
+                    className={`rounded-[2px] ${future ? 'opacity-0' : densityClass('emerald', rate)} ${
+                      date === today ? 'ring-1 ring-zinc-400' : ''
+                    }`}
                     style={{ width: CELL, height: CELL }}
                   />
                 )
