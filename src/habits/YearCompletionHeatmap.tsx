@@ -3,7 +3,7 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { getValue } from './streaks'
 import { addDays, monthShortName, todayKey } from '../lib/date'
-import { densityClass } from './colors'
+import { githubGreenClass } from './colors'
 
 const WEEKS = 53
 const CELL = 10
@@ -64,7 +64,7 @@ export function YearCompletionHeatmap({
                   <div
                     key={date}
                     title={date}
-                    className={`rounded-[2px] ${future ? 'opacity-0' : densityClass('emerald', rate)} ${
+                    className={`rounded-[2px] ${future ? 'opacity-0' : githubGreenClass(rate)} ${
                       date === today ? 'ring-1 ring-zinc-400' : ''
                     }`}
                     style={{ width: CELL, height: CELL }}
