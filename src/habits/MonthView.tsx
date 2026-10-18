@@ -90,16 +90,22 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
           const value = getValue(habit.id, date, logsByDate)
           const done = isDone(habit, value)
           const dayNum = Number(date.slice(8, 10))
+          const future = date > today
           return (
             <button
               key={date}
-              onClick={() => cellTap(date)}
+              onClick={() => !future && cellTap(date)}
+              disabled={future}
               className={`flex aspect-square flex-col items-center justify-center rounded-lg text-sm ${
-                done ? `${c.bgSolid} ${c.onSolid}` : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'
+                future
+                  ? 'cursor-not-allowed bg-zinc-950 text-zinc-800'
+                  : done
+                    ? `${c.bgSolid} ${c.onSolid}`
+                    : 'bg-zinc-900 text-zinc-500 hover:bg-zinc-800'
               } ${date === today ? 'ring-1 ring-zinc-400' : ''}`}
             >
               <span>{dayNum}</span>
-              {habit.type === 'number' && Number(value) > 0 && (
+              {!future && habit.type === 'number' && Number(value) > 0 && (
                 <span className="text-[9px] opacity-80">{Number(value)}</span>
               )}
             </button>

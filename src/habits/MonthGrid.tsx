@@ -95,15 +95,21 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
                   {dates.map((d) => {
                     const value = getValue(h.id, d, logsByDate)
                     const done = isDone(h, value)
+                    const future = d > today
                     return (
                       <td key={d} className="w-7 px-0.5 py-1.5 text-center">
                         <button
-                          onClick={() => cellTap(h, d)}
+                          onClick={() => !future && cellTap(h, d)}
+                          disabled={future}
                           className={`flex h-6 w-6 items-center justify-center rounded ${
-                            done ? `${c.bgSolid} ${c.onSolid}` : 'bg-zinc-900 text-zinc-700 hover:bg-zinc-800'
+                            future
+                              ? 'cursor-not-allowed bg-zinc-950 text-zinc-800'
+                              : done
+                                ? `${c.bgSolid} ${c.onSolid}`
+                                : 'bg-zinc-900 text-zinc-700 hover:bg-zinc-800'
                           }`}
                         >
-                          {h.type === 'number' ? Number(value) || '' : done ? '✓' : ''}
+                          {!future && (h.type === 'number' ? Number(value) || '' : done ? '✓' : '')}
                         </button>
                       </td>
                     )
