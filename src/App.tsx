@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useAuth } from './auth/AuthContext'
 import { useHabits } from './habits/useHabits'
 import { Dashboard } from './habits/Dashboard'
-import { MonthView } from './habits/MonthView'
+import { MonthTab } from './habits/MonthTab'
 import { SettingsView } from './habits/SettingsView'
 import { LogSheet } from './habits/LogSheet'
 
@@ -44,7 +44,7 @@ function HabitApp({ uid }: { uid: string }) {
           <Dashboard habits={habits} logsByDate={logsByDate} onOpenLog={() => setShowLog(true)} />
         )}
         {tab === 'month' && (
-          <MonthView habits={habits} logsByDate={logsByDate} onSetValue={setValue} />
+          <MonthTab habits={habits} logsByDate={logsByDate} onSetValue={setValue} />
         )}
         {tab === 'settings' && (
           <SettingsView
