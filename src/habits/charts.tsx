@@ -25,7 +25,7 @@ export function StatTile({
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-3 text-center">
       <div className="text-xl font-semibold">
         <span className={STAT_COLORS[color]}>{value}</span>
-        {total && <span className="text-zinc-600">/{total}</span>}
+        {total && <span className="text-sm font-normal text-zinc-600">/{total}</span>}
       </div>
       <div className="mt-1 text-[11px] leading-tight text-zinc-500">{label}</div>
     </div>
