@@ -191,3 +191,13 @@ export function dayCompletionBadgeClass(doneCount: number, total: number): strin
   if (rate < 1) return 'bg-lime-950/70 text-lime-400'
   return 'bg-emerald-900/70 text-emerald-300'
 }
+
+// Same red -> amber -> lime -> green scale as a solid hex, for SVG fills (e.g. the week bars).
+export function dayCompletionFillHex(doneCount: number, total: number): string {
+  if (total <= 0) return '#3f3f46' // zinc-700, no data
+  if (doneCount === 0) return '#dc2626' // red-600
+  const rate = doneCount / total
+  if (rate < 0.5) return '#f59e0b' // amber-500
+  if (rate < 1) return '#84cc16' // lime-500
+  return '#10b981' // emerald-500
+}

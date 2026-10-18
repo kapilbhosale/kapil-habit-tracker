@@ -1,5 +1,5 @@
 // Lightweight inline-SVG chart primitives — no charting library, keeps the PWA bundle small.
-import { githubGreenHex } from './colors'
+import { dayCompletionFillHex } from './colors'
 
 // Fixed, small categorical set — each stat always maps to the same hue, never generated/cycled.
 const STAT_COLORS = {
@@ -91,7 +91,7 @@ export function WeekBars({ data }: { data: { label: string; value: number; max: 
         const isMax = d.value === d.max && d.max > 0
         return (
           <g key={i}>
-            <rect x={x} y={height - h} width={barWidth} height={h} rx={4} style={{ fill: githubGreenHex(rate) }} />
+            <rect x={x} y={height - h} width={barWidth} height={h} rx={4} style={{ fill: dayCompletionFillHex(d.value, d.max) }} />
             <text
               x={x + barWidth / 2}
               y={height - h - 6}
