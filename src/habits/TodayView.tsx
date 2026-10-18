@@ -8,15 +8,14 @@ type Props = {
   logsByDate: Record<string, HabitLog>
   onToggle: (habitId: string) => void
   onSetValue: (habitId: string, date: string, value: number) => void
-  onArchive: (habitId: string) => void
 }
 
-export function TodayView({ habits, logsByDate, onToggle, onSetValue, onArchive }: Props) {
+export function TodayView({ habits, logsByDate, onToggle, onSetValue }: Props) {
   const date = todayKey()
   const active = habits.filter((h) => !h.archived)
 
   return (
-    <div className="mx-auto max-w-md px-4 py-6">
+    <div className="mx-auto max-w-md px-4 py-4">
       <ul className="space-y-2">
         {active.map((h) => {
           const value = logsByDate[`${h.id}_${date}`]?.value
@@ -26,10 +25,8 @@ export function TodayView({ habits, logsByDate, onToggle, onSetValue, onArchive 
           return (
             <li
               key={h.id}
-              className={`group rounded-xl border px-4 py-3 transition ${
-                done
-                  ? 'border-emerald-500 bg-emerald-500/10'
-                  : 'border-zinc-800 bg-zinc-900'
+              className={`rounded-xl border px-4 py-3 transition ${
+                done ? 'border-emerald-500 bg-emerald-500/10' : 'border-zinc-800 bg-zinc-900'
               }`}
             >
               <div className="flex items-center justify-between gap-3">
@@ -70,25 +67,19 @@ export function TodayView({ habits, logsByDate, onToggle, onSetValue, onArchive 
                     </div>
                   </>
                 )}
-                <button
-                  onClick={() => onArchive(h.id)}
-                  className="ml-1 hidden text-xs text-zinc-600 hover:text-red-400 group-hover:block"
-                  title="Archive"
-                >
-                  ✕
-                </button>
               </div>
-              {streak > 0 && (
-                <div className="mt-1 text-xs text-zinc-500">🔥 {streak} day streak</div>
-              )}
+              {streak > 0 && <div className="mt-1 text-xs text-zinc-500">🔥 {streak} day streak</div>}
               {h.type === 'number' && h.target ? (
-                <div className="mt-1 text-xs text-zinc-500">target {h.target}{h.unit ? ` ${h.unit}` : ''}</div>
+                <div className="mt-1 text-xs text-zinc-500">
+                  target {h.target}
+                  {h.unit ? ` ${h.unit}` : ''}
+                </div>
               ) : null}
             </li>
           )
         })}
         {active.length === 0 && (
-          <p className="py-8 text-center text-sm text-zinc-500">No habits yet — add one below.</p>
+          <p className="py-8 text-center text-sm text-zinc-500">No habits yet — add one from Settings.</p>
         )}
       </ul>
     </div>

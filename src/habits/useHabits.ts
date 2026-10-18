@@ -74,6 +74,11 @@ export function useHabits(uid: string | undefined) {
     await updateDoc(doc(db, 'users', uid, 'habits', habitId), { archived: true })
   }
 
+  const unarchiveHabit = async (habitId: string) => {
+    if (!uid) return
+    await updateDoc(doc(db, 'users', uid, 'habits', habitId), { archived: false })
+  }
+
   const renameHabit = async (habitId: string, name: string) => {
     if (!uid) return
     await updateDoc(doc(db, 'users', uid, 'habits', habitId), { name })
@@ -87,6 +92,7 @@ export function useHabits(uid: string | undefined) {
     setValue,
     toggleToday,
     archiveHabit,
+    unarchiveHabit,
     renameHabit,
   }
 }
