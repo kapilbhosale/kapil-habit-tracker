@@ -9,8 +9,6 @@ const WEEKS = 53
 const CELL = 10
 const GAP = 3
 
-// Dashboard heatmaps use a uniform GitHub-style green ramp (gray -> dark green
-// by intensity), not the habit's own color — that stays on the Month tab.
 export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: Record<string, HabitLog> }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const today = todayKey()
@@ -57,7 +55,7 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
                   <div
                     key={date}
                     title={date}
-                    className={`rounded-[2px] ${future ? 'opacity-0' : densityClass('emerald', rate)} ${
+                    className={`rounded-[2px] ${future ? 'opacity-0' : densityClass(habit.color, rate)} ${
                       date === today ? 'ring-1 ring-zinc-400' : ''
                     }`}
                     style={{ width: CELL, height: CELL }}
