@@ -6,6 +6,7 @@ import { currentStreak, getValue, longestStreak, perfectDaysCount } from './stre
 import { MonthLineChart, RingMeter, StatTile, WeekBars } from './charts'
 import { HabitDial } from './HabitDial'
 import { YearHeatmap } from './YearHeatmap'
+import { YearCompletionHeatmap } from './YearCompletionHeatmap'
 import { DashboardTips } from './DashboardTips'
 import { useAuth } from '../auth/AuthContext'
 
@@ -113,6 +114,10 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
           <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
             <div className="mb-2 text-xs font-medium text-zinc-400">Last 30 days</div>
             <MonthLineChart data={last30LineData} max={active.length} />
+          </div>
+
+          <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">
+            <YearCompletionHeatmap habits={active} logsByDate={logsByDate} />
           </div>
 
           {yearHabit && (

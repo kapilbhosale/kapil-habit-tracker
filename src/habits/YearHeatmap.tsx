@@ -36,7 +36,7 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
   return (
     <div>
       <div className="mb-2 flex items-center justify-between text-xs text-zinc-500">
-        <span>Past year</span>
+        <span>~1 year</span>
         <span>{doneCount} days</span>
       </div>
       <div ref={scrollRef} className="overflow-x-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>

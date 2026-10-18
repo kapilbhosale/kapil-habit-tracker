@@ -3,7 +3,7 @@ import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { datesInMonth, MONTH_NAMES, todayKey } from '../lib/date'
 import { getValue } from './streaks'
-import { colorClasses } from './colors'
+import { colorClasses, dayCompletionBadgeClass } from './colors'
 
 type Props = {
   habits: Habit[]
@@ -45,15 +45,7 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
   const dayTotal = (date: string) =>
     active.filter((h) => isDone(h, getValue(h.id, date, logsByDate))).length
 
-  const dayTotalColor = (date: string) => {
-    if (active.length === 0) return ''
-    const total = dayTotal(date)
-    if (total === 0) return 'bg-red-950/70 text-red-400'
-    const rate = total / active.length
-    if (rate < 0.5) return 'bg-amber-950/70 text-amber-400'
-    if (rate < 1) return 'bg-lime-950/70 text-lime-400'
-    return 'bg-emerald-900/70 text-emerald-300'
-  }
+  const dayTotalColor = (date: string) => dayCompletionBadgeClass(dayTotal(date), active.length)
 
   return (
     <div className="mx-auto max-w-5xl px-2 pb-28 pt-6">
