@@ -12,16 +12,21 @@ const STAT_COLORS = {
 
 export function StatTile({
   value,
+  total,
   label,
   color,
 }: {
   value: string
+  total?: string // rendered muted, e.g. "/8" after the value
   label: string
   color: keyof typeof STAT_COLORS
 }) {
   return (
     <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-3 text-center">
-      <div className={`text-xl font-semibold ${STAT_COLORS[color]}`}>{value}</div>
+      <div className="text-xl font-semibold">
+        <span className={STAT_COLORS[color]}>{value}</span>
+        {total && <span className="text-zinc-600">/{total}</span>}
+      </div>
       <div className="mt-1 text-[11px] leading-tight text-zinc-500">{label}</div>
     </div>
   )

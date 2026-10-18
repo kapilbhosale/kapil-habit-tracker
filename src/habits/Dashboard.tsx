@@ -92,13 +92,13 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
           <div className="grid grid-cols-3 gap-2">
             <StatTile value={`${overallRate}%`} label="overall completion" color="emerald" />
             <StatTile value={`${totalCheckins}`} label="total check-ins" color="sky" />
-            <StatTile value={`${avgDaily}/${active.length}`} label="avg daily habits" color="amber" />
+            <StatTile value={avgDaily} total={`${active.length}`} label="avg daily habits" color="amber" />
             <StatTile
               value={bestStreakHabit ? `🔥 ${bestStreakHabit.streak}` : '—'}
               label={bestStreakHabit ? bestStreakHabit.h.name : 'no active streak'}
               color="violet"
             />
-            <StatTile value={`${perfectDays}/${elapsedDates.length}`} label="perfect days" color="rose" />
+            <StatTile value={`${perfectDays}`} total={`${elapsedDates.length}`} label="perfect days" color="rose" />
             <StatTile
               value={allTimeStreak && allTimeStreak.best > 0 ? `🏆 ${allTimeStreak.best}` : '—'}
               label={allTimeStreak && allTimeStreak.best > 0 ? `${allTimeStreak.h.name} best ever` : 'no record yet'}
