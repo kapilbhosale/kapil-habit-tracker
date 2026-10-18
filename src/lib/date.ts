@@ -25,6 +25,16 @@ export function addDays(dateKey: string, delta: number): string {
   return toDateKey(date)
 }
 
+export function datesFrom(startKey: string, endKey: string): string[] {
+  const dates: string[] = []
+  let cursor = startKey
+  while (cursor <= endKey) {
+    dates.push(cursor)
+    cursor = addDays(cursor, 1)
+  }
+  return dates
+}
+
 export function weekdayName(dateKey: string): string {
   const [y, m, d] = dateKey.split('-').map(Number)
   return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short' })

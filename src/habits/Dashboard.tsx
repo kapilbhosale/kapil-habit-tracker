@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
-import { addDays, datesInMonth, todayKey, weekdayName } from '../lib/date'
-import { currentStreak, getValue, perfectDaysCount } from './streaks'
+import { addDays, datesFrom, datesInMonth, todayKey, weekdayName } from '../lib/date'
+import { currentStreak, getValue, longestStreak, perfectDaysCount } from './streaks'
 import { MonthLineChart, RingMeter, StatTile, WeekBars } from './charts'
 import { HabitDial } from './HabitDial'
 import { YearHeatmap } from './YearHeatmap'
 import { DashboardTips } from './DashboardTips'
+import { useAuth } from '../auth/AuthContext'
 
 type Props = {
   habits: Habit[]
@@ -15,6 +16,9 @@ type Props = {
 }
 
 export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
+  const { user } = useAuth()
+  const firstName = user?.displayName?.split(' ')[0]
+
   const active = habits.filter((h) => !h.archived)
   const today = todayKey()
   const now = new Date()
@@ -49,6 +53,13 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
   const overallRate = totalPossible > 0 ? Math.round((totalCheckins / totalPossible) * 100) : 0
   const avgDaily = elapsedDates.length > 0 ? (totalCheckins / elapsedDates.length).toFixed(1) : '0.0'
 
+  const allTimeStreak = active
+    .map((h) => {
+      const start = new Date(h.createdAt).toLocaleDateString('en-CA')
+      return { h, best: longestStreak(h, logsByDate, datesFrom(start, today)) }
+    })
+    .sort((a, b) => b.best - a.best)[0]
+
   const last30 = Array.from({ length: 30 }, (_, i) => addDays(today, i - 29))
   const last30LineData = last30.map((date) => ({
     label: date.slice(8, 10),
@@ -57,6 +68,10 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
 
   return (
     <div className="mx-auto max-w-md space-y-4 px-4 pb-28 pt-4">
+      <h1 className="text-center text-lg font-medium text-zinc-100">
+        {firstName ? `Welcome, ${firstName}` : 'Welcome back'}
+      </h1>
+
       <button onClick={onOpenLog} className="flex w-full flex-col items-center gap-1.5 py-1">
         <RingMeter
           value={todayRate}
@@ -83,6 +98,11 @@ export function Dashboard({ habits, logsByDate, onOpenLog }: Props) {
               color="violet"
             />
             <StatTile value={`${perfectDays}`} label="perfect days" color="rose" />
+            <StatTile
+              value={allTimeStreak && allTimeStreak.best > 0 ? `🏆 ${allTimeStreak.best}` : '—'}
+              label={allTimeStreak && allTimeStreak.best > 0 ? `${allTimeStreak.h.name} best ever` : 'no record yet'}
+              color="cyan"
+            />
           </div>
 
           <div className="rounded-xl border border-zinc-800 bg-zinc-900 p-4">

@@ -7,6 +7,7 @@ const STAT_COLORS = {
   amber: 'text-amber-400',
   violet: 'text-violet-400',
   rose: 'text-rose-400',
+  cyan: 'text-cyan-400',
 } as const
 
 export function StatTile({
@@ -106,6 +107,24 @@ export function WeekBars({ data }: { data: { label: string; value: number; max: 
   )
 }
 
+// Catmull-Rom -> cubic Bezier: a smooth curve that still passes through every point.
+function smoothPath(points: { x: number; y: number }[]): string {
+  if (points.length < 2) return ''
+  let d = `M ${points[0].x},${points[0].y}`
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i - 1] ?? points[i]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = points[i + 2] ?? p2
+    const cp1x = p1.x + (p2.x - p0.x) / 6
+    const cp1y = p1.y + (p2.y - p0.y) / 6
+    const cp2x = p2.x - (p3.x - p1.x) / 6
+    const cp2y = p2.y - (p3.y - p1.y) / 6
+    d += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${p2.x},${p2.y}`
+  }
+  return d
+}
+
 export function MonthLineChart({
   data,
   max,
@@ -123,7 +142,8 @@ export function MonthLineChart({
   const x = (i: number) => (n <= 1 ? 0 : (i / (n - 1)) * width)
   const y = (v: number) => padTop + plotHeight - (max > 0 ? (v / max) * plotHeight : 0)
 
-  const linePath = data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${x(i)},${y(d.value)}`).join(' ')
+  const points = data.map((d, i) => ({ x: x(i), y: y(d.value) }))
+  const linePath = smoothPath(points)
   const areaPath = `${linePath} L ${x(n - 1)},${padTop + plotHeight} L ${x(0)},${padTop + plotHeight} Z`
 
   const last = data[n - 1]
