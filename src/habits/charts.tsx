@@ -106,34 +106,52 @@ export function WeekBars({ data }: { data: { label: string; value: number; max: 
   )
 }
 
-function heatColor(rate: number): string {
-  if (rate <= 0) return 'bg-zinc-900'
-  if (rate < 0.25) return 'bg-emerald-950'
-  if (rate < 0.5) return 'bg-emerald-800'
-  if (rate < 0.75) return 'bg-emerald-600'
-  return 'bg-emerald-400'
-}
-
-export function RecentHeatmap({
-  dates,
-  rateByDate,
-  todayKey,
+export function MonthLineChart({
+  data,
+  max,
 }: {
-  dates: string[] // oldest first
-  rateByDate: (date: string) => number
-  todayKey: string
+  data: { label: string; value: number }[] // oldest first, one point per elapsed day
+  max: number
 }) {
+  const width = 300
+  const height = 64
+  const padTop = 10
+  const padBottom = 16
+  const plotHeight = height - padTop - padBottom
+  const n = data.length
+
+  const x = (i: number) => (n <= 1 ? 0 : (i / (n - 1)) * width)
+  const y = (v: number) => padTop + plotHeight - (max > 0 ? (v / max) * plotHeight : 0)
+
+  const linePath = data.map((d, i) => `${i === 0 ? 'M' : 'L'} ${x(i)},${y(d.value)}`).join(' ')
+  const areaPath = `${linePath} L ${x(n - 1)},${padTop + plotHeight} L ${x(0)},${padTop + plotHeight} Z`
+
+  const last = data[n - 1]
+
   return (
-    <div className="grid grid-cols-7 gap-1.5">
-      {dates.map((date) => (
-        <div
-          key={date}
-          title={date}
-          className={`aspect-square w-full rounded-md ${heatColor(rateByDate(date))} ${
-            date === todayKey ? 'ring-1 ring-zinc-400' : ''
-          }`}
-        />
-      ))}
-    </div>
+    <svg width="100%" viewBox={`0 0 ${width} ${height}`} className="overflow-visible">
+      {/* recessive baseline */}
+      <line x1={0} y1={padTop + plotHeight} x2={width} y2={padTop + plotHeight} className="stroke-zinc-800" strokeWidth={1} />
+      {n > 1 && (
+        <>
+          <path d={areaPath} className="fill-emerald-400/10" />
+          <path d={linePath} fill="none" className="stroke-emerald-400" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
+        </>
+      )}
+      {last && (
+        <>
+          <circle cx={x(n - 1)} cy={y(last.value)} r={4} className="fill-emerald-400 stroke-zinc-950" strokeWidth={2} />
+          <text x={x(n - 1)} y={y(last.value) - 8} textAnchor="end" className="fill-zinc-300 text-[9px]">
+            {last.value}
+          </text>
+        </>
+      )}
+      <text x={0} y={height - 2} className="fill-zinc-600 text-[9px]">
+        {data[0]?.label}
+      </text>
+      <text x={width} y={height - 2} textAnchor="end" className="fill-zinc-600 text-[9px]">
+        {last?.label}
+      </text>
+    </svg>
   )
 }
