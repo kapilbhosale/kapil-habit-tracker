@@ -158,16 +158,16 @@ export function densityClass(color: HabitColor | undefined, rate: number): strin
   return ramp[4]
 }
 
-// GitHub's exact contribution-graph greens, for the aggregate year heatmap only —
-// empty uses our theme's gray instead of GitHub's light-mode gray.
-const GITHUB_GREEN_RAMP = ['bg-zinc-800', 'bg-[#9be9a8]', 'bg-[#40c463]', 'bg-[#30a14e]', 'bg-[#216e39]'] as const
+// GitHub-style greens for the aggregate year heatmap, by % of habits completed
+// that day — empty uses our theme's gray instead of GitHub's light-mode gray.
+const GITHUB_GREEN_RAMP = ['bg-zinc-800', 'bg-[#aceebb]', 'bg-[#4ac26b]', 'bg-[#2da44e]', 'bg-[#116329]'] as const
 
 export function githubGreenClass(rate: number): string {
-  if (rate <= 0) return GITHUB_GREEN_RAMP[0]
-  if (rate < 0.25) return GITHUB_GREEN_RAMP[1]
-  if (rate < 0.5) return GITHUB_GREEN_RAMP[2]
-  if (rate < 0.75) return GITHUB_GREEN_RAMP[3]
-  return GITHUB_GREEN_RAMP[4]
+  if (rate <= 0) return GITHUB_GREEN_RAMP[0] // 0%
+  if (rate <= 0.3) return GITHUB_GREEN_RAMP[1] // 0-30%
+  if (rate <= 0.6) return GITHUB_GREEN_RAMP[2] // 30-60%
+  if (rate <= 0.9) return GITHUB_GREEN_RAMP[3] // 60-90%
+  return GITHUB_GREEN_RAMP[4] // 90-100%
 }
 
 // The red -> amber -> lime -> green "how was this day" scale, for a badge on a dark surface

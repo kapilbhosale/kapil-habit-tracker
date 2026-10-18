@@ -92,11 +92,14 @@ export function WeekBars({ data }: { data: { label: string; value: number; max: 
               rx={4}
               className={isMax ? 'fill-emerald-400' : 'fill-zinc-700'}
             />
-            {isMax && (
-              <text x={x + barWidth / 2} y={height - h - 6} textAnchor="middle" className="fill-zinc-400 text-[9px]">
-                {d.value}
-              </text>
-            )}
+            <text
+              x={x + barWidth / 2}
+              y={height - h - 6}
+              textAnchor="middle"
+              className={isMax ? 'fill-zinc-300 text-[9px]' : 'fill-zinc-600 text-[9px]'}
+            >
+              {d.value}
+            </text>
             <text x={x + barWidth / 2} y={height + 14} textAnchor="middle" className="fill-zinc-500 text-[9px]">
               {d.label}
             </text>
