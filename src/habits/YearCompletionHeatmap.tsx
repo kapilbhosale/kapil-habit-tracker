@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { getValue } from './streaks'
-import { addDays, todayKey } from '../lib/date'
+import { addDays, monthShortName, todayKey } from '../lib/date'
 import { densityClass } from './colors'
 
 const WEEKS = 53
@@ -41,6 +41,12 @@ export function YearCompletionHeatmap({
 
   const perfectDays = columns.flat().filter((d) => d <= today && dayTotal(d) === habits.length && habits.length > 0).length
 
+  const monthLabels = columns.map((week, wi) => {
+    const prevMonth = wi > 0 ? monthShortName(columns[wi - 1][0]) : null
+    const thisMonth = monthShortName(week[0])
+    return thisMonth !== prevMonth ? thisMonth : ''
+  })
+
   return (
     <div>
       <div className="mb-2 flex items-center justify-between text-xs text-zinc-500">
@@ -65,6 +71,13 @@ export function YearCompletionHeatmap({
                   />
                 )
               })}
+            </div>
+          ))}
+        </div>
+        <div className="mt-1 flex gap-[3px]" style={{ width: WEEKS * (CELL + GAP) }}>
+          {monthLabels.map((label, wi) => (
+            <div key={wi} className="text-[9px] text-zinc-600" style={{ width: CELL }}>
+              {label}
             </div>
           ))}
         </div>

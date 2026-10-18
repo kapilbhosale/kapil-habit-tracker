@@ -40,6 +40,11 @@ export function weekdayName(dateKey: string): string {
   return new Date(y, m - 1, d).toLocaleDateString('en-US', { weekday: 'short' })
 }
 
+export function monthShortName(dateKey: string): string {
+  const [y, m, d] = dateKey.split('-').map(Number)
+  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short' })
+}
+
 export const MONTH_NAMES = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',

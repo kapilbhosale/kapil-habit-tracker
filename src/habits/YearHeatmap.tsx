@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import type { Habit, HabitLog } from './types'
 import { isDone } from './types'
 import { getValue } from './streaks'
-import { addDays, todayKey } from '../lib/date'
+import { addDays, monthShortName, todayKey } from '../lib/date'
 import { densityClass } from './colors'
 
 const WEEKS = 53
@@ -31,6 +31,13 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
   }, [habit.id])
 
   const doneCount = columns.flat().filter((d) => isDone(habit, getValue(habit.id, d, logsByDate))).length
+
+  // Label the first column of each new month.
+  const monthLabels = columns.map((week, wi) => {
+    const prevMonth = wi > 0 ? monthShortName(columns[wi - 1][0]) : null
+    const thisMonth = monthShortName(week[0])
+    return thisMonth !== prevMonth ? thisMonth : ''
+  })
 
   return (
     <div>
@@ -62,6 +69,13 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
                   />
                 )
               })}
+            </div>
+          ))}
+        </div>
+        <div className="mt-1 flex gap-[3px]" style={{ width: WEEKS * (CELL + GAP) }}>
+          {monthLabels.map((label, wi) => (
+            <div key={wi} className="text-[9px] text-zinc-600" style={{ width: CELL }}>
+              {label}
             </div>
           ))}
         </div>

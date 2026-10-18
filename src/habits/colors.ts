@@ -38,7 +38,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-emerald-500/10',
     bgSolid: 'bg-emerald-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-emerald-950', 'bg-emerald-800', 'bg-emerald-600', 'bg-emerald-400'],
+    ramp: ['bg-zinc-800', 'bg-emerald-950', 'bg-emerald-800', 'bg-emerald-600', 'bg-emerald-400'],
   },
   sky: {
     text: 'text-sky-400',
@@ -48,7 +48,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-sky-500/10',
     bgSolid: 'bg-sky-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-sky-950', 'bg-sky-800', 'bg-sky-600', 'bg-sky-400'],
+    ramp: ['bg-zinc-800', 'bg-sky-950', 'bg-sky-800', 'bg-sky-600', 'bg-sky-400'],
   },
   amber: {
     text: 'text-amber-400',
@@ -58,7 +58,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-amber-500/10',
     bgSolid: 'bg-amber-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-amber-950', 'bg-amber-800', 'bg-amber-600', 'bg-amber-400'],
+    ramp: ['bg-zinc-800', 'bg-amber-950', 'bg-amber-800', 'bg-amber-600', 'bg-amber-400'],
   },
   violet: {
     text: 'text-violet-400',
@@ -68,7 +68,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-violet-500/10',
     bgSolid: 'bg-violet-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-violet-950', 'bg-violet-800', 'bg-violet-600', 'bg-violet-400'],
+    ramp: ['bg-zinc-800', 'bg-violet-950', 'bg-violet-800', 'bg-violet-600', 'bg-violet-400'],
   },
   rose: {
     text: 'text-rose-400',
@@ -78,7 +78,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-rose-500/10',
     bgSolid: 'bg-rose-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-rose-950', 'bg-rose-800', 'bg-rose-600', 'bg-rose-400'],
+    ramp: ['bg-zinc-800', 'bg-rose-950', 'bg-rose-800', 'bg-rose-600', 'bg-rose-400'],
   },
   orange: {
     text: 'text-orange-400',
@@ -88,7 +88,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-orange-500/10',
     bgSolid: 'bg-orange-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-orange-950', 'bg-orange-800', 'bg-orange-600', 'bg-orange-400'],
+    ramp: ['bg-zinc-800', 'bg-orange-950', 'bg-orange-800', 'bg-orange-600', 'bg-orange-400'],
   },
   cyan: {
     text: 'text-cyan-400',
@@ -98,7 +98,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-cyan-500/10',
     bgSolid: 'bg-cyan-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-cyan-950', 'bg-cyan-800', 'bg-cyan-600', 'bg-cyan-400'],
+    ramp: ['bg-zinc-800', 'bg-cyan-950', 'bg-cyan-800', 'bg-cyan-600', 'bg-cyan-400'],
   },
   pink: {
     text: 'text-pink-400',
@@ -108,7 +108,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-pink-500/10',
     bgSolid: 'bg-pink-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-pink-950', 'bg-pink-800', 'bg-pink-600', 'bg-pink-400'],
+    ramp: ['bg-zinc-800', 'bg-pink-950', 'bg-pink-800', 'bg-pink-600', 'bg-pink-400'],
   },
   blue: {
     text: 'text-blue-400',
@@ -118,7 +118,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-blue-500/10',
     bgSolid: 'bg-blue-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-blue-950', 'bg-blue-800', 'bg-blue-600', 'bg-blue-400'],
+    ramp: ['bg-zinc-800', 'bg-blue-950', 'bg-blue-800', 'bg-blue-600', 'bg-blue-400'],
   },
   lime: {
     text: 'text-lime-400',
@@ -128,7 +128,7 @@ const CLASSES: Record<HabitColor, ColorClasses> = {
     bgSoft: 'bg-lime-500/10',
     bgSolid: 'bg-lime-500',
     onSolid: 'text-zinc-950',
-    ramp: ['bg-zinc-900', 'bg-lime-950', 'bg-lime-800', 'bg-lime-600', 'bg-lime-400'],
+    ramp: ['bg-zinc-800', 'bg-lime-950', 'bg-lime-800', 'bg-lime-600', 'bg-lime-400'],
   },
 }
 
