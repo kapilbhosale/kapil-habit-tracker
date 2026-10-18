@@ -1,6 +1,12 @@
 import { useState } from 'react'
 import { useAuth } from './auth/AuthContext'
 import { useHabits } from './habits/useHabits'
+import { AddHabitModal } from './habits/AddHabitModal'
+import { TodayView } from './habits/TodayView'
+import { MonthGrid } from './habits/MonthGrid'
+import { InsightsView } from './habits/InsightsView'
+
+type Tab = 'today' | 'month' | 'insights'
 
 function SignInScreen() {
   const { signIn } = useAuth()
@@ -16,61 +22,59 @@ function SignInScreen() {
   )
 }
 
-function HabitList({ uid }: { uid: string }) {
-  const { habits, logsByDate, addHabit, toggleToday, todayKey } = useHabits(uid)
-  const [name, setName] = useState('')
-  const date = todayKey()
+function HabitApp({ uid }: { uid: string }) {
+  const { habits, logsByDate, addHabit, setValue, toggleToday, archiveHabit } = useHabits(uid)
+  const [tab, setTab] = useState<Tab>('today')
+  const [showAdd, setShowAdd] = useState(false)
 
   return (
-    <div className="mx-auto max-w-md px-4 py-8">
-      <form
-        className="mb-6 flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault()
-          if (!name.trim()) return
-          addHabit(name.trim())
-          setName('')
-        }}
-      >
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="New habit"
-          className="flex-1 rounded-md border border-zinc-700 bg-zinc-900 px-3 py-2 text-zinc-100 placeholder-zinc-500"
-        />
-        <button
-          type="submit"
-          className="rounded-md bg-emerald-500 px-4 py-2 font-medium text-zinc-950 hover:bg-emerald-400"
-        >
-          Add
-        </button>
-      </form>
-
-      <ul className="space-y-2">
-        {habits
-          .filter((h) => !h.archived)
-          .map((h) => {
-            const done = logsByDate[`${h.id}_${date}`]?.done ?? false
-            return (
-              <li key={h.id}>
-                <button
-                  onClick={() => toggleToday(h.id)}
-                  className={`flex w-full items-center justify-between rounded-md border px-4 py-3 text-left transition ${
-                    done
-                      ? 'border-emerald-500 bg-emerald-500/10 text-emerald-300'
-                      : 'border-zinc-700 bg-zinc-900 text-zinc-100'
-                  }`}
-                >
-                  <span>{h.name}</span>
-                  <span>{done ? '✓' : ''}</span>
-                </button>
-              </li>
-            )
-          })}
-        {habits.length === 0 && (
-          <p className="text-center text-sm text-zinc-500">No habits yet — add one above.</p>
+    <div className="min-h-screen bg-zinc-950 pb-16 text-zinc-100">
+      <main>
+        {tab === 'today' && (
+          <TodayView
+            habits={habits}
+            logsByDate={logsByDate}
+            onToggle={toggleToday}
+            onSetValue={setValue}
+            onArchive={archiveHabit}
+          />
         )}
-      </ul>
+        {tab === 'month' && (
+          <MonthGrid habits={habits} logsByDate={logsByDate} onSetValue={setValue} />
+        )}
+        {tab === 'insights' && <InsightsView habits={habits} logsByDate={logsByDate} />}
+      </main>
+
+      {tab === 'today' && (
+        <button
+          onClick={() => setShowAdd(true)}
+          className="fixed bottom-20 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-emerald-500 text-2xl font-medium text-zinc-950 shadow-lg"
+        >
+          +
+        </button>
+      )}
+
+      <nav className="fixed bottom-0 left-0 right-0 flex border-t border-zinc-800 bg-zinc-950">
+        {(
+          [
+            ['today', 'Today'],
+            ['month', 'Month'],
+            ['insights', 'Insights'],
+          ] as [Tab, string][]
+        ).map(([key, label]) => (
+          <button
+            key={key}
+            onClick={() => setTab(key)}
+            className={`flex-1 py-3 text-sm font-medium ${
+              tab === key ? 'text-emerald-400' : 'text-zinc-500'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </nav>
+
+      {showAdd && <AddHabitModal onAdd={addHabit} onClose={() => setShowAdd(false)} />}
     </div>
   )
 }
@@ -94,7 +98,7 @@ function App() {
           Sign out
         </button>
       </header>
-      <HabitList uid={user.uid} />
+      <HabitApp uid={user.uid} />
     </div>
   )
 }
