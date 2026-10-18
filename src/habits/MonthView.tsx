@@ -6,6 +6,7 @@ import { getValue } from './streaks'
 import { HabitDial } from './HabitDial'
 import { colorClasses } from './colors'
 import { MonthHabitHeatmaps } from './MonthHabitHeatmaps'
+import { NumberCellEditor } from './NumberCellEditor'
 
 type Props = {
   habits: Habit[]
@@ -22,6 +23,7 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
   const active = habits.filter((h) => !h.archived)
   const [selectedId, setSelectedId] = useState(active[0]?.id)
   const habit = active.find((h) => h.id === selectedId) ?? active[0]
+  const [editingDate, setEditingDate] = useState<string | null>(null)
 
   const dates = datesInMonth(year, month)
   const today = todayKey()
@@ -47,11 +49,11 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
   }
 
   const cellTap = (date: string) => {
-    const current = getValue(habit.id, date, logsByDate)
     if (habit.type === 'boolean') {
+      const current = getValue(habit.id, date, logsByDate)
       onSetValue(habit.id, date, !(current === true))
     } else {
-      onSetValue(habit.id, date, (Number(current) || 0) + 1)
+      setEditingDate(date)
     }
   }
 
@@ -121,6 +123,17 @@ export function MonthView({ habits, logsByDate, onSetValue }: Props) {
         <h2 className="mb-3 text-xs font-medium text-zinc-500">All habits this month</h2>
         <MonthHabitHeatmaps habits={active} logsByDate={logsByDate} dates={dates} />
       </div>
+
+      {editingDate && (
+        <NumberCellEditor
+          habitName={habit.name}
+          date={editingDate}
+          value={Number(getValue(habit.id, editingDate, logsByDate)) || 0}
+          unit={habit.unit}
+          onChange={(v) => onSetValue(habit.id, editingDate, v)}
+          onClose={() => setEditingDate(null)}
+        />
+      )}
     </div>
   )
 }

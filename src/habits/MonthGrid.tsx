@@ -4,6 +4,7 @@ import { isDone } from './types'
 import { datesInMonth, MONTH_NAMES, todayKey } from '../lib/date'
 import { getValue } from './streaks'
 import { colorClasses, dayCompletionBadgeClass } from './colors'
+import { NumberCellEditor } from './NumberCellEditor'
 
 type Props = {
   habits: Habit[]
@@ -18,6 +19,7 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
   const active = habits.filter((h) => !h.archived)
   const dates = datesInMonth(year, month)
   const today = todayKey()
+  const [editing, setEditing] = useState<{ habit: Habit; date: string } | null>(null)
 
   const changeMonth = (delta: number) => {
     let m = month + delta
@@ -34,11 +36,11 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
   }
 
   const cellTap = (habit: Habit, date: string) => {
-    const current = getValue(habit.id, date, logsByDate)
     if (habit.type === 'boolean') {
+      const current = getValue(habit.id, date, logsByDate)
       onSetValue(habit.id, date, !(current === true))
     } else {
-      onSetValue(habit.id, date, (Number(current) || 0) + 1)
+      setEditing({ habit, date })
     }
   }
 
@@ -134,6 +136,17 @@ export function MonthGrid({ habits, logsByDate, onSetValue }: Props) {
       </div>
       {active.length === 0 && (
         <p className="py-8 text-center text-sm text-zinc-500">No habits yet.</p>
+      )}
+
+      {editing && (
+        <NumberCellEditor
+          habitName={editing.habit.name}
+          date={editing.date}
+          value={Number(getValue(editing.habit.id, editing.date, logsByDate)) || 0}
+          unit={editing.habit.unit}
+          onChange={(v) => onSetValue(editing.habit.id, editing.date, v)}
+          onClose={() => setEditing(null)}
+        />
       )}
     </div>
   )
