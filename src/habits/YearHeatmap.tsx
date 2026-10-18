@@ -45,7 +45,7 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
         <span>~1 year</span>
         <span>{doneCount} days</span>
       </div>
-      <div ref={scrollRef} className="overflow-x-auto [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
+      <div ref={scrollRef} className="overflow-x-auto pt-0.5 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: 'none' }}>
         <div className="flex gap-[3px]" style={{ width: WEEKS * (CELL + GAP) }}>
           {columns.map((week, wi) => (
             <div key={wi} className="flex flex-col gap-[3px]">
@@ -63,7 +63,7 @@ export function YearHeatmap({ habit, logsByDate }: { habit: Habit; logsByDate: R
                     key={date}
                     title={date}
                     className={`rounded-[2px] ${future ? 'opacity-0' : densityClass(habit.color, rate)} ${
-                      date === today ? 'ring-1 ring-zinc-400' : ''
+                      date === today ? 'ring-1 ring-inset ring-zinc-400' : ''
                     }`}
                     style={{ width: CELL, height: CELL }}
                   />
